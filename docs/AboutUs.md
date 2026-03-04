@@ -18,6 +18,14 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 [[portfolio](team/Yucheng.md)]
 
 * Role: Developer & Project designer
+### Guo Xintong
+
+<img src="images/guoxintongmark.png" width="200px">
+
+* GitHub: [GuoxintongMark](https://github.com/GuoxintongMark)
+* Role: Developer
+* Responsibilities: Implementation and testing
+
 
 ### Jane Doe
 

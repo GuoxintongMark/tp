@@ -1,20 +1,22 @@
 package seedu.address.model.delivery;
 
+import static java.util.Objects.requireNonNull;
+import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
+
+import java.util.Iterator;
+import java.util.List;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.delivery.exceptions.DeliveryNotFoundException;
 import seedu.address.model.delivery.exceptions.DuplicateDeliveryException;
-import java.util.Iterator;
-import java.util.List;
-
-import static java.util.Objects.requireNonNull;
-import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 /**
  * A list of deliveries that enforces uniqueness between its elements and does not allow nulls.
- * A delivery is considered unique by comparing using {@code Delivery#isSameDelivery(Delivery)}. As such, adding and updating of
- * deliveries uses Delivery#isSameDelivery(Delivery) for equality so as to ensure that the delivery being added or updated is
- * unique in terms of identity in the UniqueDeliveryList. However, the removal of a delivery uses Delivery#equals(Object) so
+ * A delivery is considered unique by comparing using {@code Delivery#isSameDelivery(Delivery)}.
+ * As such, adding and updating of deliveries uses Delivery#isSameDelivery(Delivery) for equality
+ * so as to ensure that the delivery being added or updated is unique in terms of identity in the
+ * UniqueDeliveryList. However, the removal of a delivery uses Delivery#equals(Object) so
  * as to ensure that the delivery with exactly the same fields will be removed.
  *
  * Supports a minimal set of list operations.

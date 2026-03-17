@@ -1,4 +1,4 @@
-package seedu.address.model.company;
+package seedu.address.model.person;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -14,14 +14,15 @@ import static seedu.address.testutil.TypicalPersons.BOB;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.model.company.Company;
 import seedu.address.testutil.PersonBuilder;
 
 public class PersonTest {
 
     @Test
     public void asObservableList_modifyList_throwsUnsupportedOperationException() {
-        Company person = new PersonBuilder().build();
-        assertThrows(UnsupportedOperationException.class, () -> person.getTags().remove(0));
+        Company company = new PersonBuilder().build();
+        assertThrows(UnsupportedOperationException.class, () -> company.getTags().remove(0));
     }
 
     @Test

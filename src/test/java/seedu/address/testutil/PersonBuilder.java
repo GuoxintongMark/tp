@@ -39,14 +39,14 @@ public class PersonBuilder {
     }
 
     /**
-     * Initializes the PersonBuilder with the data of {@code personToCopy}.
+     * Initializes the builder with the data of {@code companyToCopy}.
      */
-    public PersonBuilder(Company personToCopy) {
-        name = personToCopy.getName();
-        phone = personToCopy.getPhone();
-        email = personToCopy.getEmail();
-        address = personToCopy.getAddress();
-        tags = new HashSet<>(personToCopy.getTags());
+    public PersonBuilder(Company companyToCopy) {
+        name = companyToCopy.getName();
+        phone = companyToCopy.getPhone();
+        email = companyToCopy.getEmail();
+        address = companyToCopy.getAddress();
+        tags = new HashSet<>(companyToCopy.getTags());
     }
 
     /**

@@ -147,6 +147,17 @@ public class ModelManager implements Model {
     //=========== DeliveryBook ==================================================================
 
     @Override
+    public void setDeliveryBookFilePath(Path deliveryBookFilePath) {
+        requireNonNull(deliveryBookFilePath);
+        userPrefs.setDeliveryBookFilePath(deliveryBookFilePath);
+    }
+
+    @Override
+    public void setDeliveryBook(ReadOnlyDeliveryBook deliveryBook) {
+        this.deliveryBook.resetData(deliveryBook);
+    }
+
+    @Override
     public ReadOnlyDeliveryBook getDeliveryBook() {
         return deliveryBook;
     }

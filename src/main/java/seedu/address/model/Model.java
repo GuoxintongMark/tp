@@ -98,6 +98,10 @@ public interface Model {
     void updateFilteredCompanyList(Predicate<Company> predicate);
 
     // for deliveryCommands
+    void setDeliveryBookFilePath(Path deliveryBookFilePath);
+
+    void setDeliveryBook(ReadOnlyDeliveryBook deliveryBook);
+
     /** Returns the DeliveryBook */
     ReadOnlyDeliveryBook getDeliveryBook();
 

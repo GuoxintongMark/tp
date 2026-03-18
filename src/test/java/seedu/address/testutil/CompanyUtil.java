@@ -41,7 +41,7 @@ public class CompanyUtil {
     }
 
     /**
-     * Returns the part of command string for the given {@code EditCompanyDescriptor}'s details.
+     * Returns the part of command string for the given {@code EditDeliveryDescriptor}'s details.
      */
     public static String getEditCompanyDescriptorDetails(EditCompanyDescriptor descriptor) {
         StringBuilder sb = new StringBuilder();

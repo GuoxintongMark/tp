@@ -40,7 +40,7 @@ public class EditCompanyDescriptorBuilder {
     }
 
     /**
-     * Sets the {@code Name} of the {@code EditCompanyDescriptor} that we are building.
+     * Sets the {@code Name} of the {@code EditDeliveryDescriptor} that we are building.
      */
     public EditCompanyDescriptorBuilder withName(String name) {
         descriptor.setName(new Name(name));
@@ -48,7 +48,7 @@ public class EditCompanyDescriptorBuilder {
     }
 
     /**
-     * Sets the {@code Phone} of the {@code EditCompanyDescriptor} that we are building.
+     * Sets the {@code Phone} of the {@code EditDeliveryDescriptor} that we are building.
      */
     public EditCompanyDescriptorBuilder withPhone(String phone) {
         descriptor.setPhone(new Phone(phone));
@@ -56,7 +56,7 @@ public class EditCompanyDescriptorBuilder {
     }
 
     /**
-     * Sets the {@code Email} of the {@code EditCompanyDescriptor} that we are building.
+     * Sets the {@code Email} of the {@code EditDeliveryDescriptor} that we are building.
      */
     public EditCompanyDescriptorBuilder withEmail(String email) {
         descriptor.setEmail(new Email(email));
@@ -64,7 +64,7 @@ public class EditCompanyDescriptorBuilder {
     }
 
     /**
-     * Sets the {@code Address} of the {@code EditCompanyDescriptor} that we are building.
+     * Sets the {@code Address} of the {@code EditDeliveryDescriptor} that we are building.
      */
     public EditCompanyDescriptorBuilder withAddress(String address) {
         descriptor.setAddress(new Address(address));
@@ -72,7 +72,7 @@ public class EditCompanyDescriptorBuilder {
     }
 
     /**
-     * Parses the {@code tags} into a {@code Set<Tag>} and set it to the {@code EditCompanyDescriptor}
+     * Parses the {@code tags} into a {@code Set<Tag>} and set it to the {@code EditDeliveryDescriptor}
      * that we are building.
      */
     public EditCompanyDescriptorBuilder withTags(String... tags) {

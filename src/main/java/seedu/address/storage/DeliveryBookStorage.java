@@ -18,7 +18,7 @@ public interface DeliveryBookStorage {
     Path getDeliveryBookFilePath();
 
     /**
-     * Returns AddressBook data as a {@link ReadOnlyDeliveryBook}.
+     * Returns DeliveryBook data as a {@link ReadOnlyDeliveryBook}.
      * Returns {@code Optional.empty()} if storage file is not found.
      *
      * @throws DataLoadingException if loading the data from storage failed.

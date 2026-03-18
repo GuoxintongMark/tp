@@ -10,12 +10,16 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import seedu.address.logic.commands.deliverycommands.AddCommand;
-import seedu.address.logic.parser.*;
+import seedu.address.logic.parser.ArgumentMultimap;
+import seedu.address.logic.parser.ArgumentTokenizer;
+import seedu.address.logic.parser.Parser;
+import seedu.address.logic.parser.ParserUtil;
+import seedu.address.logic.parser.Prefix;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.delivery.Company;
 import seedu.address.model.delivery.Address;
-import seedu.address.model.delivery.Product;
+import seedu.address.model.delivery.Company;
 import seedu.address.model.delivery.Delivery;
+import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -34,7 +38,7 @@ public class AddCommandParser implements Parser<AddCommand> {
 
         if (!arePrefixesPresent(argMultimap, PREFIX_PRODUCT, PREFIX_ADDRESS, PREFIX_COMPANY)
                 || !argMultimap.getPreamble().isEmpty()) {
-            throw new ParseException (String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
         }
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_PRODUCT, PREFIX_COMPANY, PREFIX_ADDRESS);

@@ -9,10 +9,12 @@ import java.util.Set;
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.company.*;
-import seedu.address.model.delivery.*;
 import seedu.address.model.company.Address;
+import seedu.address.model.company.Email;
+import seedu.address.model.company.Name;
+import seedu.address.model.company.Phone;
 import seedu.address.model.delivery.Company;
+import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -71,7 +73,7 @@ public class ParserUtil {
      *
      * @throws ParseException if the given {@code address} is invalid.
      */
-    public static seedu.address.model.company.Address  parseCompanyAddress(String address) throws ParseException {
+    public static seedu.address.model.company.Address parseCompanyAddress(String address) throws ParseException {
         requireNonNull(address);
         String trimmedAddress = address.trim();
         if (!Address.isValidAddress(trimmedAddress)) {
@@ -86,7 +88,7 @@ public class ParserUtil {
      *
      * @throws ParseException if the given {@code address} is invalid.
      */
-    public static seedu.address.model.delivery.Address  parseDeliveryAddress(String address) throws ParseException {
+    public static seedu.address.model.delivery.Address parseDeliveryAddress(String address) throws ParseException {
         requireNonNull(address);
         String trimmedAddress = address.trim();
         if (!Address.isValidAddress(trimmedAddress)) {
@@ -137,7 +139,7 @@ public class ParserUtil {
         if (!Company.isValidCompany(trimmedCompany)) {
             throw new ParseException(Company.MESSAGE_CONSTRAINTS);
         }
-        return new Company (trimmedCompany);
+        return new Company(trimmedCompany);
     }
 
     /**

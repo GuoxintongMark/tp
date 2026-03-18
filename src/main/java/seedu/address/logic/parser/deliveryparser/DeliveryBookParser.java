@@ -67,6 +67,9 @@ public class DeliveryBookParser {
         case UnmarkCommand.COMMAND_WORD:
             return new UnmarkCommandParser().parse(arguments);
 
+        case SwitchCommand.COMMAND_WORD:
+            return new SwitchCommand();
+
         case ExitCommand.COMMAND_WORD:
             return new ExitCommand();
 

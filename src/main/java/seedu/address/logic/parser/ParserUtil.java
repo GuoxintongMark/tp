@@ -119,8 +119,8 @@ public class ParserUtil {
     public static Product parseProduct(String product) throws ParseException {
         requireNonNull(product);
         String trimmedProduct = product.trim();
-        if (!Email.isValidEmail(trimmedProduct)) {
-            throw new ParseException(Email.MESSAGE_CONSTRAINTS);
+        if (!Product.isValidProduct(trimmedProduct)) {
+            throw new ParseException(Product.MESSAGE_CONSTRAINTS);
         }
         return new Product(trimmedProduct);
     }
@@ -134,8 +134,8 @@ public class ParserUtil {
     public static seedu.address.model.delivery.Company parseCompany(String company) throws ParseException {
         requireNonNull(company);
         String trimmedCompany = company.trim();
-        if (!Email.isValidEmail(trimmedCompany)) {
-            throw new ParseException(Email.MESSAGE_CONSTRAINTS);
+        if (!Company.isValidCompany(trimmedCompany)) {
+            throw new ParseException(Company.MESSAGE_CONSTRAINTS);
         }
         return new Company (trimmedCompany);
     }

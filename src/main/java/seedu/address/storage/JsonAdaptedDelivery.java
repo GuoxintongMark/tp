@@ -25,7 +25,7 @@ class JsonAdaptedDelivery {
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
 
     /**
-     * Constructs a {@code JsonAdaptedDelivery} with the given company details.
+     * Constructs a {@code JsonAdaptedDelivery} with the given delivery details.
      */
     @JsonCreator
     public JsonAdaptedDelivery(@JsonProperty("product") String product, 
@@ -44,7 +44,7 @@ class JsonAdaptedDelivery {
      * Converts a given {@code Delivery} into this class for Jackson use.
      */
     public JsonAdaptedDelivery(Delivery source) {
-        product = source.getProduct().value;
+        product = source.getProduct().productName;
         company = source.getCompany().value;
         address = source.getAddress().value;
         tags.addAll(source.getTags().stream()
@@ -55,7 +55,7 @@ class JsonAdaptedDelivery {
     /**
      * Converts this Jackson-friendly adapted company object into the model's {@code Delivery} object.
      *
-     * @throws IllegalValueException if there were any data constraints violated in the adapted company.
+     * @throws IllegalValueException if there were any data constraints violated in the adapted delivery.
      */
     public Delivery toModelType() throws IllegalValueException {
         final List<Tag> companyTags = new ArrayList<>();
@@ -64,7 +64,7 @@ class JsonAdaptedDelivery {
         }
 
         if (product == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Product.class.getSimpleProduct()));
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Product.class.getSimpleName()));
         }
         if (!Product.isValidProduct(product)) {
             throw new IllegalValueException(Product.MESSAGE_CONSTRAINTS);
@@ -72,7 +72,7 @@ class JsonAdaptedDelivery {
         final Product modelProduct = new Product(product);
 
         if (company == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Company.class.getSimpleProduct()));
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Company.class.getSimpleName()));
         }
         if (!Company.isValidCompany(company)) {
             throw new IllegalValueException(Company.MESSAGE_CONSTRAINTS);
@@ -80,7 +80,7 @@ class JsonAdaptedDelivery {
         final Company modelCompany = new Company(company);
 
         if (address == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleProduct()));
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
         }
         if (!Address.isValidAddress(address)) {
             throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
@@ -88,7 +88,7 @@ class JsonAdaptedDelivery {
         final Address modelAddress = new Address(address);
 
         final Set<Tag> modelTags = new HashSet<>(companyTags);
-        return new Delivery(modelProduct, modelCompany, modelEmail, modelAddress, modelTags);
+        return new Delivery(modelProduct, modelCompany, modelAddress, modelTags);
     }
 
 }

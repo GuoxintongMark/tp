@@ -6,7 +6,7 @@ MyCelia is a command-line-driven desktop application for B2B delivery coordinato
 
 ![MyCelia Main Window](images/main-window.png)
 
-\---
+---
 
 ## What's Inside
 
@@ -17,7 +17,7 @@ MyCelia runs two books simultaneously:
 
 Switch between them with a single command or via the UI tabs. Everything saves automatically.
 
-\---
+---
 
 ## Quick Start
 
@@ -29,7 +29,7 @@ java -jar MyCelia.jar
 
 That's it. MyCelia creates its data files on first launch and loads sample data so you can get your bearings immediately.
 
-\---
+---
 
 ## The Interface
 
@@ -86,7 +86,7 @@ The Company Book view shows all your business contacts. Each entry displays the 
 
 The Delivery Book view shows all logged deliveries. Deliveries marked as delivered will display a `delivered` tag. Below is the location the data is saved.
 
-\---
+---
 
 ## Commands
 
@@ -98,7 +98,7 @@ The Delivery Book view shows all logged deliveries. Deliveries marked as deliver
 |`help`|Open the help window|
 |`exit`|Save and close|
 
-\---
+---
 
 ### Company Book
 
@@ -123,7 +123,7 @@ Manage your network of business contacts. These commands are active when you're 
 |`a/`|Physical address|Yes|
 |`t/`|Tag (repeatable)|No|
 
-\---
+---
 
 ### Delivery Book
 
@@ -148,7 +148,7 @@ Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from t
 |`a/`|Delivery address|Yes|
 |`t/`|Tag (repeatable)|No|
 
-\---
+---
 
 ## How Data Works
 
@@ -159,7 +159,7 @@ Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from t
 * To back up, copy both JSON files somewhere safe
 * To transfer to another machine, move the jar and both JSON files together
 
-\---
+---
 
 ## Project Structure
 
@@ -181,7 +181,7 @@ src/
 │   └── ui/                        # JavaFX interface components
 ```
 
-\---
+---
 
 ## Built With
 
@@ -190,7 +190,7 @@ src/
 * Jackson (JSON serialisation)
 * JUnit 5 (testing)
 
-\---
+---
 
 *MyCelia — named after mycelium, the underground network that keeps fungi connected. Because your business relationships deserve the same.*
 

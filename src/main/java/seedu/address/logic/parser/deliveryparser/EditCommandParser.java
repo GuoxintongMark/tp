@@ -21,6 +21,7 @@ import seedu.address.logic.parser.ArgumentTokenizer;
 import seedu.address.logic.parser.Parser;
 import seedu.address.logic.parser.ParserUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -55,7 +56,9 @@ public class EditCommandParser implements Parser<EditCommand> {
             editDeliveryDescriptor.setProduct(ParserUtil.parseProduct(argMultimap.getValue(PREFIX_PRODUCT).get()));
         }
         if (argMultimap.getValue(PREFIX_COMPANY).isPresent()) {
-            editDeliveryDescriptor.setCompany(ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get()));
+            CompanyNameContainsKeywordsPredicate company =
+                    ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get());
+            editDeliveryDescriptor.setCompany(company);
         }
         if (argMultimap.getValue(PREFIX_DEADLINE).isPresent()) {
             editDeliveryDescriptor.setDeadline(ParserUtil.parseDeadline(argMultimap.getValue(PREFIX_DEADLINE).get()));

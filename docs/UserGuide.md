@@ -1,12 +1,12 @@
 [![CI Status](https://github.com/se-edu/addressbook-level3/workflows/Java%20CI/badge.svg)](https://github.com/AY2526S2-CS2103T-W11-4/tp)
 
-> \_Keeping your business network connected.\_
+> _Keeping your business network connected_
 
 MyCelia is a command-line-driven desktop application for B2B delivery coordinators. Manage your business contacts and track outgoing deliveries — all from a single keyboard-driven interface. No clicking around. Just type and go.
 
 ![MyCelia Main Window](images/main-window.png)
 
-\---
+---
 
 ## What's Inside
 
@@ -17,7 +17,7 @@ MyCelia runs two books simultaneously:
 
 Switch between them with a single command or via the UI tabs. Everything saves automatically.
 
-\---
+---
 
 ## Quick Start
 
@@ -29,7 +29,7 @@ java -jar MyCelia.jar
 
 That's it. MyCelia creates its data files on first launch and loads sample data so you can get your bearings immediately.
 
-\---
+---
 
 ## The Interface
 
@@ -86,7 +86,7 @@ The Company Book view shows all your business contacts. Each entry displays the 
 
 The Delivery Book view shows all logged deliveries. Deliveries marked as delivered will display a `delivered` tag. Below is the location the data is saved.
 
-\---
+---
 
 ## Commands
 
@@ -98,7 +98,7 @@ The Delivery Book view shows all logged deliveries. Deliveries marked as deliver
 |`help`|Open the help window|
 |`exit`|Save and close|
 
-\---
+---
 
 ### Company Book
 
@@ -123,7 +123,7 @@ Manage your network of business contacts. These commands are active when you're 
 |`a/`|Physical address|Yes|
 |`t/`|Tag (repeatable)|No|
 
-\---
+---
 
 ### Delivery Book
 
@@ -152,7 +152,7 @@ Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from t
 
 Deliveries are sorted by deadline in ascending order, so the earliest deadline appears first.
 
-\---
+---
 
 ## How Data Works
 
@@ -163,7 +163,7 @@ Deliveries are sorted by deadline in ascending order, so the earliest deadline a
 * To back up, copy both JSON files somewhere safe
 * To transfer to another machine, move the jar and both JSON files together
 
-\---
+---
 
 ## Project Structure
 
@@ -185,7 +185,7 @@ src/
 │   └── ui/                        # JavaFX interface components
 ```
 
-\---
+---
 
 ## Built With
 
@@ -194,7 +194,7 @@ src/
 * Jackson (JSON serialisation)
 * JUnit 5 (testing)
 
-\---
+---
 
 *MyCelia — named after mycelium, the underground network that keeps fungi connected. Because your business relationships deserve the same.*
 

@@ -10,7 +10,7 @@ import seedu.address.logic.parser.Parser;
 import seedu.address.logic.parser.ParserUtil;
 import seedu.address.logic.parser.Prefix;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.delivery.Company;
+import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 
 /**
  * Parses input arguments and creates a new SortCommand object.
@@ -31,7 +31,8 @@ public class SortCommandParser implements Parser<SortCommand> {
         }
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_COMPANY);
-        Company company = ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get());
+        CompanyNameContainsKeywordsPredicate company =
+                ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get());
         return new SortCommand(company);
     }
 

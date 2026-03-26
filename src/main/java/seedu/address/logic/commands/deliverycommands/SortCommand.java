@@ -10,7 +10,7 @@ import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.delivery.Company;
+import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 import seedu.address.model.delivery.Delivery;
 
 /**
@@ -28,32 +28,34 @@ public class SortCommand extends Command {
     public static final String MESSAGE_SORT_SUCCESS = "Sorted %1$d delivery(s) for company: %2$s";
     public static final String MESSAGE_NO_DELIVERIES_FOR_COMPANY = "No deliveries found for company: %1$s";
 
-    private final Company company;
+    private final CompanyNameContainsKeywordsPredicate name;
 
     /**
      * Creates a SortCommand to sort deliveries for the specified company.
      */
-    public SortCommand(Company company) {
-        requireNonNull(company);
-        this.company = company;
+    public SortCommand(CompanyNameContainsKeywordsPredicate name) {
+        requireNonNull(name);
+        this.name = name;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        Predicate<Delivery> matchesCompany = delivery -> delivery.getCompany().value.equalsIgnoreCase(company.value);
+        String companyName = getCompanyName();
+        Predicate<Delivery> matchesCompany =
+                delivery -> delivery.getCompany().getName().toString().equalsIgnoreCase(companyName);
 
         boolean hasMatchingDelivery = model.getDeliveryBook().getDeliveryList().stream()
                 .anyMatch(matchesCompany);
         if (!hasMatchingDelivery) {
-            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES_FOR_COMPANY, company));
+            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES_FOR_COMPANY, companyName));
         }
 
         model.sortDeliveriesByDeadline(matchesCompany);
         model.updateFilteredDeliveryList(matchesCompany);
 
         return new CommandResult(
-                String.format(MESSAGE_SORT_SUCCESS, model.getFilteredDeliveryList().size(), company));
+                String.format(MESSAGE_SORT_SUCCESS, model.getFilteredDeliveryList().size(), companyName));
     }
 
     @Override
@@ -67,13 +69,17 @@ public class SortCommand extends Command {
         }
 
         SortCommand otherSortCommand = (SortCommand) other;
-        return company.equals(otherSortCommand.company);
+        return name.equals(otherSortCommand.name);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("company", company)
+                .add("company", getCompanyName())
                 .toString();
+    }
+
+    private String getCompanyName() {
+        return name.getKeywords().get(0);
     }
 }

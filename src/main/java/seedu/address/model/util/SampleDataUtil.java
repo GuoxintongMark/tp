@@ -1,0 +1,65 @@
+package seedu.address.model.util;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import seedu.address.model.company.Address;
+import seedu.address.model.company.Company;
+import seedu.address.model.company.Email;
+import seedu.address.model.company.Name;
+import seedu.address.model.company.Phone;
+import seedu.address.model.delivery.Deadline;
+import seedu.address.model.delivery.Delivery;
+import seedu.address.model.delivery.Product;
+import seedu.address.model.tag.Tag;
+
+/**
+ * Contains utility methods for populating {@code AddressBook} and {@code DeliveryBook} in SampleData.
+ */
+public class SampleDataUtil {
+    public static SampleData getSampleDataUtil() {
+        Company apple = new Company(new Name("Apple"), new Phone("87438807"), new Email("apple@example.com"),
+                new seedu.address.model.company.Address("78 Airport Blvd, #02-234"),
+                getTagSet("important"));
+        Company dell = new Company(new Name("Dell"), new Phone("99272758"), new Email("dell@example.com"),
+                new Address("Changi Business Park Central 1"), getTagSet("test"));
+        Company samsung = new Company(new Name("Samsung"), new Phone("93210283"), new Email("samsung@example.com"),
+                new Address("313 Orchard Rd"), getTagSet("test"));
+        Company hp = new Company(new Name("HP Inc"), new Phone("91031282"), new Email("HP@example.com"),
+                new Address("750 Chai Chee Road, #01-01"), getTagSet("test"));
+
+        Company[] companies = new Company[] {apple, dell, samsung, hp};
+
+        Delivery[] deliveries = new Delivery[] {
+            new Delivery(new Product("iPhone"), apple,
+                new Deadline("2026-03-25 14:30"),
+                new seedu.address.model.delivery.Address("78 Airport Blvd, #02-234"),
+                getTagSet("fragile")),
+            new Delivery(new Product("laptop"), dell,
+                new Deadline("2026-03-25 14:30"),
+                new seedu.address.model.delivery.Address("Changi Business Park Central 1"),
+                getTagSet("test")),
+            new Delivery(new Product("tablet"), samsung,
+                new Deadline("2026-03-25 14:30"),
+                new seedu.address.model.delivery.Address("313 Orchard Rd"),
+                getTagSet("fragile")),
+            new Delivery(new Product("printer"), hp,
+                new Deadline("2026-03-25 14:30"),
+                new seedu.address.model.delivery.Address("750 Chai Chee Road, #01-01"),
+                getTagSet("heavy")),
+        };
+
+        return new SampleData(companies, deliveries);
+    }
+
+    /**
+     * Returns a tag set containing the list of strings given.
+     */
+    public static Set<Tag> getTagSet(String... strings) {
+        return Arrays.stream(strings)
+                .map(Tag::new)
+                .collect(Collectors.toSet());
+    }
+
+}

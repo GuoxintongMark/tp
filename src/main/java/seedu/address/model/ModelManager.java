@@ -22,7 +22,7 @@ public class ModelManager implements Model {
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
     private static final Comparator<Delivery> DELIVERY_DEADLINE_COMPARATOR = Comparator
             .comparing((Delivery delivery) -> delivery.getDeadline().getValue())
-            .thenComparing(delivery -> delivery.getCompany().value.toLowerCase())
+            .thenComparing(delivery -> delivery.getCompany().getName().toString().toLowerCase())
             .thenComparing(delivery -> delivery.getProduct().productName.toLowerCase());
 
     private final AddressBook addressBook;

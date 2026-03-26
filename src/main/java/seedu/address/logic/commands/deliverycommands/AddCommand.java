@@ -17,6 +17,7 @@ import seedu.address.model.Model;
 import seedu.address.model.company.Company;
 import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 import seedu.address.model.delivery.Address;
+import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
@@ -47,15 +48,18 @@ public class AddCommand extends Command {
 
     private final Product product;
     private final CompanyNameContainsKeywordsPredicate name;
+    private final Deadline deadline;
     private Address address;
     private final Set<Tag> tagList;
 
     /**
      * Creates an AddCommand to add the specified {@code Delivery}.
      */
-    public AddCommand(Product product, CompanyNameContainsKeywordsPredicate name, Address address, Set<Tag> tagList) {
+    public AddCommand(Product product, CompanyNameContainsKeywordsPredicate name,
+                      Deadline deadline, Address address, Set<Tag> tagList) {
         this.product = product;
         this.name = name;
+        this.deadline = deadline;
         this.address = address;
         this.tagList = tagList;
     }
@@ -75,7 +79,7 @@ public class AddCommand extends Command {
             this.address = new Address(company.getAddress().toString());
         }
 
-        Delivery toAdd = new Delivery(this.product, company, this.address, this.tagList);
+        Delivery toAdd = new Delivery(this.product, company, this.deadline, this.address, this.tagList);
 
         if (model.hasDelivery(toAdd)) {
             throw new CommandException(MESSAGE_DUPLICATE_DELIVERY);

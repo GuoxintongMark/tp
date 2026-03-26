@@ -10,7 +10,7 @@ import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.delivery.Company;
+import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 import seedu.address.model.delivery.Delivery;
 
 /**
@@ -28,12 +28,12 @@ public class SortCommand extends Command {
     public static final String MESSAGE_SORT_SUCCESS = "Sorted %1$d delivery(s) for company: %2$s";
     public static final String MESSAGE_NO_DELIVERIES_FOR_COMPANY = "No deliveries found for company: %1$s";
 
-    private final Company company;
+    private final CompanyNameContainsKeywordsPredicate company;
 
     /**
      * Creates a SortCommand to sort deliveries for the specified company.
      */
-    public SortCommand(Company company) {
+    public SortCommand(CompanyNameContainsKeywordsPredicate company) {
         requireNonNull(company);
         this.company = company;
     }
@@ -41,7 +41,8 @@ public class SortCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        Predicate<Delivery> matchesCompany = delivery -> delivery.getCompany().value.equalsIgnoreCase(company.value);
+        Predicate<Delivery> matchesCompany = delivery ->
+                delivery.getCompany().getName().toString().equalsIgnoreCase(company.toString());
 
         boolean hasMatchingDelivery = model.getDeliveryBook().getDeliveryList().stream()
                 .anyMatch(matchesCompany);

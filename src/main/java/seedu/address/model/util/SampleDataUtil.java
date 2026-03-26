@@ -10,6 +10,7 @@ import seedu.address.model.company.Email;
 import seedu.address.model.company.Name;
 import seedu.address.model.company.Phone;
 import seedu.address.model.delivery.Delivery;
+import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
 
@@ -32,20 +33,20 @@ public class SampleDataUtil {
 
         Delivery[] deliveries = new Delivery[] {
             new Delivery(new Product("iPhone"), apple,
-                new seedu.address.model.delivery.Address("78 Airport Blvd, #02-234"),
                 new Deadline("2026-03-25 14:30"),
+                new seedu.address.model.delivery.Address("78 Airport Blvd, #02-234"),
                 getTagSet("fragile")),
             new Delivery(new Product("laptop"), dell,
-                new seedu.address.model.delivery.Address("Changi Business Park Central 1"),
                 new Deadline("2026-03-25 14:30"),
+                new seedu.address.model.delivery.Address("Changi Business Park Central 1"),
                 getTagSet("test")),
             new Delivery(new Product("tablet"), samsung,
-                new seedu.address.model.delivery.Address("313 Orchard Rd"),
                 new Deadline("2026-03-25 14:30"),
+                new seedu.address.model.delivery.Address("313 Orchard Rd"),
                 getTagSet("fragile")),
             new Delivery(new Product("printer"), hp,
-                new seedu.address.model.delivery.Address("750 Chai Chee Road, #01-01"),
                 new Deadline("2026-03-25 14:30"),
+                new seedu.address.model.delivery.Address("750 Chai Chee Road, #01-01"),
                 getTagSet("heavy")),
         };
 

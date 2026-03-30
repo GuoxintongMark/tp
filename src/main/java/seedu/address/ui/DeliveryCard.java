@@ -47,9 +47,6 @@ public class DeliveryCard extends UiPart<Region> {
      */
     public DeliveryCard(Delivery delivery, int displayedIndex) {
         super(FXML);
-
-        this.getRoot().getStylesheets().add(getClass().getResource("/view/DarkTheme.css").toExternalForm());
-
         this.delivery = delivery;
         id.setText(displayedIndex + ". ");
         product.setText(delivery.getProduct().productName);

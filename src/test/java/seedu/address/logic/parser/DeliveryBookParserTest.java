@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.logic.commands.deliverycommands.ListCommand;
 import seedu.address.logic.commands.deliverycommands.EditCommand;
 import seedu.address.logic.commands.deliverycommands.EditCommand.EditDeliveryDescriptor;
+import seedu.address.logic.commands.deliverycommands.ListCommand;
 import seedu.address.logic.parser.deliveryparser.DeliveryBookParser;
 import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 import seedu.address.model.delivery.Deadline;

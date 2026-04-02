@@ -1,9 +1,13 @@
 package seedu.address.ui;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -14,10 +18,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.Model;
 import seedu.address.model.delivery.Delivery;
@@ -45,6 +45,11 @@ public class RoutePanel extends UiPart<Region> {
     @FXML private Label routeStatusLabel;
     @FXML private StackPane mapPlaceholder;
 
+    /**
+     * Creates map display of route
+     * @param deliveryList
+     * @param model
+     */
     public RoutePanel(ObservableList<Delivery> deliveryList, Model model) {
         super(FXML);
         this.deliveryList = deliveryList;
@@ -68,14 +73,20 @@ public class RoutePanel extends UiPart<Region> {
 
     @FXML
     private void handlePlanRoutes() {
-        List<Delivery> deliveries = deliveryList.stream().collect(Collectors.toList());
+        planRoutesFor(deliveryList.stream().collect(Collectors.toList()));
+    }
 
+    /**
+     * Plans routes for the given deliveries and updates the route map.
+     */
+    public void planRoutesFor(List<Delivery> deliveries) {
         if (deliveries.isEmpty()) {
             routeStatusLabel.setText("No deliveries to route. Add some deliveries first.");
             return;
         }
 
         User user = model.getUser();
+        List<Delivery> deliveriesToRoute = new ArrayList<>(deliveries);
 
         planRoutesButton.setDisable(true);
         routeStatusLabel.setText("Planning routes for "
@@ -84,7 +95,7 @@ public class RoutePanel extends UiPart<Region> {
         Task<RouteResult> task = new Task<>() {
             @Override
             protected RouteResult call() throws Exception {
-                return routerService.planRoutes(deliveries, user);
+                return routerService.planRoutes(deliveriesToRoute, user);
             }
         };
 

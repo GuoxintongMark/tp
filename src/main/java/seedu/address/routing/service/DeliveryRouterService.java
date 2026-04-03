@@ -86,8 +86,9 @@ public class DeliveryRouterService {
             timeWindows.add(new int[]{earliest, latest});
             serviceDurations.add(DEFAULT_SERVICE_SECS);
         }
-        if(overdue) {
-            throw new IOException("Overdue Deliveries, please update the deadline of:\n" + overdueDeliveries.stream().map(x -> x.toString() + "\n").toList());
+        if (overdue) {
+            throw new IOException("Overdue Deliveries, please update the deadline of:\n"
+                    + overdueDeliveries.stream().map(x -> x.toString() + "\n").toList());
         }
 
         // Step 4: optimize using user's vehicle profile

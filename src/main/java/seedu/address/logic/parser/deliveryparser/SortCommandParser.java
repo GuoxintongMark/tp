@@ -3,6 +3,8 @@ package seedu.address.logic.parser.deliveryparser;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
 
+import java.util.List;
+
 import seedu.address.logic.commands.deliverycommands.SortCommand;
 import seedu.address.logic.parser.ArgumentMultimap;
 import seedu.address.logic.parser.ArgumentTokenizer;
@@ -11,8 +13,6 @@ import seedu.address.logic.parser.ParserUtil;
 import seedu.address.logic.parser.Prefix;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
-
-import java.util.List;
 
 /**
  * Parses input arguments and creates a new SortCommand object.

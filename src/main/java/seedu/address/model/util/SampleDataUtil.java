@@ -44,10 +44,9 @@ public class SampleDataUtil {
 
         Company[] companies = new Company[] {apple, dell, samsung, hp};
         String date;
-        if (LocalTime.now().isBefore(LocalTime.of(14,30))) {
+        if (LocalTime.now().isBefore(LocalTime.of(14, 30))) {
             date = LocalDate.now().toString();
-        }
-        else {
+        } else {
             date = LocalDate.now().plusDays(1).toString();
         }
         Delivery[] deliveries = new Delivery[] {

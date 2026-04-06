@@ -1,11 +1,14 @@
 package seedu.address.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextInputControl;
@@ -52,6 +55,7 @@ public class MainWindow extends UiPart<Stage> {
     @FXML private StackPane routePanelPlaceholder;
     @FXML private StackPane resultDisplayPlaceholder;
     @FXML private StackPane statusbarPlaceholder;
+    @FXML private Label userAddressLabel;
 
     /**
      * Creates a {@code MainWindow} with the given {@code Stage} and {@code Logic}.
@@ -93,7 +97,7 @@ public class MainWindow extends UiPart<Stage> {
         companyListPanel = new CompanyListPanel(model.getFilteredCompanyList());
         companyListPanelPlaceholder.getChildren().add(companyListPanel.getRoot());
 
-        deliveryListPanel = new DeliveryListPanel(model.getFilteredDeliveryList(), this::updateMapButtonState);
+        deliveryListPanel = new DeliveryListPanel(model.getFilteredDeliveryList(), model, this::updateMapButtonState);
         deliveryListPanelPlaceholder.getChildren().add(deliveryListPanel.getRoot());
 
         // RoutePanel owns all routing logic — MainWindow just hosts it
@@ -108,6 +112,8 @@ public class MainWindow extends UiPart<Stage> {
 
         CommandBox commandBox = new CommandBox(this::executeCommand);
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
+
+        userAddressLabel.textProperty().bind(model.getUserAddress());
 
         syncSelectedTabWithMode();
         updateMapButtonState();
@@ -171,19 +177,19 @@ public class MainWindow extends UiPart<Stage> {
 
     @FXML
     private void handleShowSelectedRoutes() {
-        List<seedu.address.model.delivery.Delivery> selectedDeliveries = deliveryListPanel.getSelectedDeliveries();
+        List<seedu.address.model.delivery.Delivery> selectedDeliveries = model.getSelectedDeliveriesInDisplayOrder();
         if (selectedDeliveries.isEmpty()) {
             updateMapButtonState();
             return;
         }
 
-        routePanel.planRoutesFor(selectedDeliveries);
         listTabPane.getSelectionModel().select(ROUTES_TAB_INDEX);
+        Platform.runLater(() -> routePanel.planRoutesFor(selectedDeliveries));
     }
 
     private void updateMapButtonState() {
-        if (mapSelectedDeliveriesButton != null && deliveryListPanel != null) {
-            mapSelectedDeliveriesButton.setDisable(deliveryListPanel.getSelectedDeliveries().isEmpty());
+        if (mapSelectedDeliveriesButton != null) {
+            mapSelectedDeliveriesButton.setDisable(model.getSelectedDeliveriesInDisplayOrder().isEmpty());
         }
     }
 
@@ -198,7 +204,14 @@ public class MainWindow extends UiPart<Stage> {
             if (commandResult.isExit()) {
                 handleExit();
             }
-            syncSelectedTabWithMode();
+            if (!commandResult.getDeliveriesToRoute().isEmpty()) {
+                listTabPane.getSelectionModel().select(ROUTES_TAB_INDEX);
+                List<seedu.address.model.delivery.Delivery> toRoute =
+                        new ArrayList<>(commandResult.getDeliveriesToRoute());
+                Platform.runLater(() -> routePanel.planRoutesFor(toRoute));
+            } else {
+                syncSelectedTabWithMode();
+            }
             updateMapButtonState();
             return commandResult;
         } catch (CommandException | ParseException e) {

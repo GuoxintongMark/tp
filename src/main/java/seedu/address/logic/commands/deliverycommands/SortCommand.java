@@ -37,7 +37,6 @@ public class SortCommand extends Command {
      * Creates a SortCommand to sort deliveries for the specified company.
      */
     public SortCommand(List<CompanyNameContainsKeywordsPredicate> name) {
-        System.out.println(name);
         requireNonNull(name);
         this.name = name;
     }
@@ -65,7 +64,8 @@ public class SortCommand extends Command {
         }
 
         return new CommandResult(
-                String.format(MESSAGE_SORT_SUCCESS, model.getFilteredDeliveryList().size(), companyName));
+                String.format(MESSAGE_SORT_SUCCESS, model.getFilteredDeliveryList().size(),
+                        String.join(" ", companyName)));
     }
 
     @Override

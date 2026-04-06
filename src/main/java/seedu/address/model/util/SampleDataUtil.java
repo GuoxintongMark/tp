@@ -30,28 +30,26 @@ public class SampleDataUtil {
     public static SampleData getSampleDataUtil() {
         Company apple = new Company(new Name("Apple"), new Phone("87438807"), new Email("apple@example.com"),
                 new Address("78 Airport Blvd, #02-234"),
-                getTagSet("important"));
+                getTagSet("VIP"));
         Company dell = new Company(new Name("Dell"), new Phone("99272758"), new Email("dell@example.com"),
-                new Address("Changi Business Park Central 1"), getTagSet("partner"));
+                new Address("Changi Business Park Central 1"), getTagSet("COD"));
         Company samsung = new Company(new Name("Samsung"), new Phone("93210283"), new Email("samsung@example.com"),
-                new Address("313 Orchard Rd"), getTagSet("priority"));
+                new Address("313 Orchard Rd"), getTagSet("VIP"));
         Company hp = new Company(new Name("HP Inc"), new Phone("91031282"), new Email("HP@example.com"),
-                new Address("750 Chai Chee Road, #01-01"), getTagSet("payment"));
-        Company test = new Company(new Name("test"), new Phone("91031282"), new Email("HP@example.com"),
-                new Address("750 Chai Chee Road, #01-01"), getTagSet("payment"));
+                new Address("750 Chai Chee Road, #01-01"), getTagSet("COD"));
 
-        Company[] companies = new Company[] {apple, dell, samsung, hp, test};
+        Company[] companies = new Company[] {apple, dell, samsung, hp};
 
         Delivery[] deliveries = new Delivery[] {
             new Delivery(new Product("iPhone"), apple,
-                new Deadline("2025-03-29 14:30"),
+                new Deadline("2026-03-29 14:30"),
                 getTagSet("fragile")),
             new Delivery(new Product("laptop"), dell,
-                new Deadline(DATETIME.plusHours(7).format(FORMAT)),
+                new Deadline(DATETIME.plusDays(1).format(FORMAT)),
                 getTagSet("delayed")),
             new Delivery(new Product("tablet"), samsung,
                 new Deadline(DATETIME.plusHours(1).format(FORMAT)),
-                getTagSet("fragile")),
+                getTagSet("urgent")),
             new Delivery(new Product("printer"), hp,
                 new Deadline(DATETIME.plusHours(3).format(FORMAT)),
                 getTagSet("heavy")),

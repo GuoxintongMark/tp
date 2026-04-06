@@ -3,6 +3,8 @@ package seedu.address.logic.parser.deliveryparser;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
 
+import java.util.List;
+
 import seedu.address.logic.commands.deliverycommands.SortCommand;
 import seedu.address.logic.parser.ArgumentMultimap;
 import seedu.address.logic.parser.ArgumentTokenizer;
@@ -42,7 +44,6 @@ public class SortCommandParser implements Parser<SortCommand> {
                 })
                 .toList();
 
-        System.out.println(companies);
         if (companies.isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
         }

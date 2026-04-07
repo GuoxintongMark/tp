@@ -11,7 +11,9 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -27,8 +29,10 @@
         <URL value="@Extensions.css" />
       </stylesheets>
 
-      <VBox>
-        <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
+      <VBox style="-fx-background-color: #0d1117;">
+
+        <!-- Hidden MenuBar for keyboard accelerators (F1 help) -->
+        <MenuBar fx:id="menuBar" visible="false" managed="false">
           <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit" />
           </Menu>
@@ -37,73 +41,74 @@
           </Menu>
         </MenuBar>
 
-        <StackPane VBox.vgrow="NEVER" fx:id="commandBoxPlaceholder" styleClass="pane-with-border">
+        <!-- Top Bar: App Title + Pill Toggle + User Address -->
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="16">
+          <Label text="MyCelia" styleClass="app-title" />
+
+          <!-- Pill Toggle -->
+          <HBox fx:id="pillToggle" styleClass="pill-toggle" alignment="CENTER_LEFT">
+            <Button fx:id="pillCompanies" text="Companies" styleClass="pill-button-active"
+                    onAction="#handlePillCompanies" />
+            <Button fx:id="pillDeliveries" text="Deliveries" styleClass="pill-button"
+                    onAction="#handlePillDeliveries" />
+            <Button fx:id="pillRoutes" text="Routes" styleClass="pill-button"
+                    onAction="#handlePillRoutes" />
+          </HBox>
+
+          <!-- Spacer -->
+          <Region HBox.hgrow="ALWAYS" />
+
+          <!-- User Address (compact, right-aligned) -->
+          <Label fx:id="userAddressLabel" styleClass="user-address-label" />
+        </HBox>
+
+        <!-- Command Box -->
+        <StackPane VBox.vgrow="NEVER" fx:id="commandBoxPlaceholder" style="-fx-background-color: #0d1117;">
           <padding>
-            <Insets top="5" right="10" bottom="5" left="10" />
+            <Insets top="8" right="16" bottom="4" left="16" />
           </padding>
         </StackPane>
 
-        <StackPane VBox.vgrow="NEVER" fx:id="resultDisplayPlaceholder" styleClass="pane-with-border"
-                   minHeight="80" prefHeight="80" maxHeight="80">
+        <!-- Result Display (compact feedback bar) -->
+        <StackPane VBox.vgrow="NEVER" fx:id="resultDisplayPlaceholder" styleClass="feedback-bar"
+                   minHeight="32" prefHeight="32" maxHeight="48">
           <padding>
-            <Insets top="5" right="10" bottom="5" left="10" />
+            <Insets top="2" right="16" bottom="2" left="16" />
           </padding>
         </StackPane>
 
-        <VBox spacing="5" styleClass="pane-with-border">
-          <padding>
-            <Insets top="5" right="10" bottom="5" left="10" />
-          </padding>
-          <Label fx:id="userAddressLabel"
-                 wrapText="true"
-                 style="-fx-background-color: white; -fx-text-fill: black; -fx-padding: 8;"
-                 maxWidth="Infinity"
-                 VBox.vgrow="NEVER"/>
-        </VBox>
-
+        <!-- Tab Pane (headers hidden, controlled by pill toggle) -->
         <TabPane fx:id="listTabPane" VBox.vgrow="ALWAYS">
           <tabs>
             <Tab closable="false" text="Companies">
-              <VBox styleClass="pane-with-border" minWidth="340" prefWidth="340">
+              <VBox style="-fx-background-color: #0d1117;" minWidth="340" prefWidth="340">
                 <padding>
-                  <Insets top="10" right="10" bottom="10" left="10" />
+                  <Insets top="10" right="12" bottom="10" left="12" />
                 </padding>
-
-                <Label text="Company Book" styleClass="cell_big_label" />
-                <StackPane fx:id="companyListPanelPlaceholder" VBox.vgrow="ALWAYS">
-                  <VBox.margin>
-                    <Insets top="10" />
-                  </VBox.margin>
-                </StackPane>
+                <StackPane fx:id="companyListPanelPlaceholder" VBox.vgrow="ALWAYS" />
               </VBox>
             </Tab>
 
             <Tab closable="false" text="Deliveries">
-              <VBox styleClass="pane-with-border" minWidth="340" prefWidth="340">
+              <VBox style="-fx-background-color: #0d1117;" minWidth="340" prefWidth="340">
                 <padding>
-                  <Insets top="10" right="10" bottom="10" left="10" />
+                  <Insets top="10" right="12" bottom="10" left="12" />
                 </padding>
-                <Label text="Delivery Book" styleClass="cell_big_label" />
                 <Button fx:id="mapSelectedDeliveriesButton"
                         text="Plan Today's Route"
                         onAction="#handleShowSelectedRoutes"
                         disable="true"
-                        styleClass="plan-routes-button">
+                        styleClass="button">
                   <VBox.margin>
-                    <Insets top="8" />
+                    <Insets bottom="8" />
                   </VBox.margin>
                 </Button>
-                <StackPane fx:id="deliveryListPanelPlaceholder" VBox.vgrow="ALWAYS">
-                  <VBox.margin>
-                    <Insets top="10" />
-                  </VBox.margin>
-                </StackPane>
+                <StackPane fx:id="deliveryListPanelPlaceholder" VBox.vgrow="ALWAYS" />
               </VBox>
             </Tab>
 
-            <!-- Routes tab: placeholder filled by RoutePanel in MainWindow.fillInnerParts() -->
             <Tab closable="false" text="Routes">
-              <StackPane fx:id="routePanelPlaceholder" styleClass="pane-with-border" />
+              <StackPane fx:id="routePanelPlaceholder" style="-fx-background-color: #0d1117;" />
             </Tab>
           </tabs>
           <VBox.vgrow>

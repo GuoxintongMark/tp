@@ -45,7 +45,7 @@ public class FilterCommand extends Command {
         requireNonNull(model);
         List<String> companyName = getCompanyName();
         Predicate<Delivery> matchesCompany = delivery -> false;
-        List<String> empty= new ArrayList<>();
+        List<String> empty = new ArrayList<>();
         for (String name : companyName) {
             System.out.println(name);
             Predicate<Delivery> match = delivery -> delivery.getCompany().getName().toString().equalsIgnoreCase(name);
@@ -58,8 +58,8 @@ public class FilterCommand extends Command {
         }
         model.sortDeliveriesByDeadline(matchesCompany);
         model.updateFilteredDeliveryList(matchesCompany);
-        if (!empty.isEmpty()){
-            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES_FOR_COMPANY, companyName));
+        if (!empty.isEmpty()) {
+            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES_FOR_COMPANY, String.join(" ", companyName)));
         }
 
         return new CommandResult(

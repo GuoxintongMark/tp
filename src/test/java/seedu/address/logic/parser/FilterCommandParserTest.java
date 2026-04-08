@@ -27,7 +27,8 @@ public class FilterCommandParserTest {
     @Test
     public void parse_validArgs_returnsSortCommand() {
         assertParseSuccess(parser, " c/Dell",
-                new FilterCommand(List.of(new CompanyNameContainsKeywordsPredicate(List.of("Dell")))));
+                new FilterCommand(List.of(),
+                        List.of(new CompanyNameContainsKeywordsPredicate(List.of("Dell"))), List.of(), List.of()));
     }
 
     @Test

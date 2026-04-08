@@ -27,7 +27,8 @@ public class DeliveryRouterService {
     private final OptimizationService optimizationService;
 
     /**
-     * Creates a DeliveryRouterService.
+     * Creates a {@code DeliveryRouterService}.
+     * Initialises geocoding and optimisation services backed by a shared HTTP client.
      */
     public DeliveryRouterService() {
         OrsHttpClient client = new OrsHttpClient();
@@ -37,6 +38,11 @@ public class DeliveryRouterService {
 
     /**
      * Plans optimized routes for today's deliveries using the default sample user.
+     * Convenience overload for when no user has been configured yet.
+     *
+     * @param deliveries the full delivery list from the model
+     * @return optimized {@link RouteResult}
+     * @throws IOException if geocoding or optimisation fails
      */
     public RouteResult planRoutes(List<Delivery> deliveries) throws IOException {
         return planRoutes(deliveries, SampleDataUtil.getSampleUser());
@@ -47,22 +53,27 @@ public class DeliveryRouterService {
      *
      * @param deliveries the full delivery list from the model
      * @param user       the logged-in user (provides depot address and vehicle profile)
+     * @return optimized {@link RouteResult} with road-following geometry
+     * @throws IOException if geocoding or optimisation fails, or if any delivery is overdue
      */
     public RouteResult planRoutes(List<Delivery> deliveries, User user) throws IOException {
         if (deliveries.isEmpty()) {
             throw new IOException("No deliveries to route.");
         }
 
+        // Step 1: geocode depot from user's company address
         Coordinate depot = geocodingService.geocode(user.getDepotAddress());
         List<Coordinate> vehicleCoords = new ArrayList<>();
         vehicleCoords.add(depot);
 
+        // Step 2: geocode all delivery addresses
         List<String> addresses = new ArrayList<>();
         for (Delivery d : deliveries) {
             addresses.add(d.getCompany().getAddress().value);
         }
         List<Coordinate> deliveryCoords = geocodingService.geocodeAll(addresses);
 
+        // Step 3: build time windows using current time as earliest and deadline as latest
         List<Delivery> overdueDeliveries = new ArrayList<>();
         List<int[]> timeWindows = new ArrayList<>();
         List<Integer> serviceDurations = new ArrayList<>();
@@ -83,6 +94,7 @@ public class DeliveryRouterService {
                     + overdueDeliveries.stream().map(x -> x.toString() + "\n").toList());
         }
 
+        // Step 4: optimise using user's vehicle profile
         return optimizationService.optimize(
                 vehicleCoords, deliveryCoords,
                 timeWindows, serviceDurations,

@@ -1,72 +1,69 @@
 package seedu.address.logic.parser.companyparser;
 
-import seedu.address.logic.commands.deliverycommands.FilterCommand;
-import seedu.address.logic.parser.*;
-import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
-import seedu.address.model.delivery.ProductContainsKeywordsPredicate;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
-import java.time.LocalDate;
 import java.util.List;
 
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.parser.CliSyntax.*;
+import seedu.address.logic.commands.companycommands.FilterCommand;
+import seedu.address.logic.parser.ArgumentMultimap;
+import seedu.address.logic.parser.ArgumentTokenizer;
+import seedu.address.logic.parser.Parser;
+import seedu.address.logic.parser.Prefix;
+import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
- * Parses input arguments and creates a new FilterCommand object.
+ * Parses input arguments and creates a new company FilterCommand object.
  */
 public class FilterCommandParser implements Parser<FilterCommand> {
 
     /**
-     * Parses the given {@code String} of arguments in the context of the FilterCommand
-     * and returns a FilterCommand object for execution.
+     * Parses user input into command for execution.
      *
+     * @param userInput full user input string
+     * @return the command based on the user input
      * @throws ParseException if the user input does not conform the expected format
      */
-    public FilterCommand parse(String args) throws ParseException {
-        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_PRODUCT, PREFIX_COMPANY, PREFIX_DEADLINE);
+    public FilterCommand parse(String userInput) throws ParseException {
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(
+                userInput, PREFIX_COMPANY, PREFIX_ADDRESS, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_TAG);
 
         if (!argMultimap.getPreamble().isEmpty()
-                || (!arePrefixesPresent(argMultimap, PREFIX_PRODUCT)
-                && !arePrefixesPresent(argMultimap, PREFIX_COMPANY)
-                && !arePrefixesPresent(argMultimap, PREFIX_DEADLINE))) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
+                || (!arePrefixesPresent(argMultimap, PREFIX_COMPANY)
+                && !arePrefixesPresent(argMultimap, PREFIX_ADDRESS)
+                && !arePrefixesPresent(argMultimap, PREFIX_PHONE)
+                && !arePrefixesPresent(argMultimap, PREFIX_EMAIL)
+                && !arePrefixesPresent(argMultimap, PREFIX_TAG))) {
+            throw new ParseException(
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
         }
 
-        List<CompanyNameContainsKeywordsPredicate> companies = argMultimap.getAllValues(PREFIX_COMPANY).stream()
-                .map(x -> {
-                    try {
-                        return ParserUtil.parseCompany(x);
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .toList();
+        List<String> names = argMultimap.getAllValues(PREFIX_COMPANY).stream()
+                .map(String::trim).filter(s -> !s.isEmpty()).toList();
 
-        List<ProductContainsKeywordsPredicate> products = argMultimap.getAllValues(PREFIX_PRODUCT).stream()
-                .map(x -> {
-                    try {
-                        return ParserUtil.parseProductName(x);
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .toList();
+        List<String> addresses = argMultimap.getAllValues(PREFIX_ADDRESS).stream()
+                .map(String::trim).filter(s -> !s.isEmpty()).toList();
 
-        List<LocalDate[]> timeRanges = argMultimap.getAllValues(PREFIX_DEADLINE).stream()
-                .map(x -> {
-                    try {
-                        return ParserUtil.parseTimeRange(x.split("\\s+")[0], x.split("\\s+")[1]);
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .toList();
+        List<String> phones = argMultimap.getAllValues(PREFIX_PHONE).stream()
+                .map(String::trim).filter(s -> !s.isEmpty()).toList();
 
-        if (products.isEmpty() && companies.isEmpty() && timeRanges.isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
+        List<String> emails = argMultimap.getAllValues(PREFIX_EMAIL).stream()
+                .map(String::trim).filter(s -> !s.isEmpty()).toList();
+
+        List<String> tags = argMultimap.getAllValues(PREFIX_TAG).stream()
+                .map(String::trim).filter(s -> !s.isEmpty()).toList();
+
+        if (names.isEmpty() && addresses.isEmpty() && phones.isEmpty()
+                && emails.isEmpty() && tags.isEmpty()) {
+            throw new ParseException(
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
         }
-        return new FilterCommand(products, companies, timeRanges);
+
+        return new FilterCommand(names, addresses, phones, emails, tags);
     }
 
     private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {

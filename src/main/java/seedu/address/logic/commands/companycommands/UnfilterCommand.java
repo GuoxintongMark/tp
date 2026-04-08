@@ -1,15 +1,17 @@
-package seedu.address.logic.commands.deliverycommands;
+package seedu.address.logic.commands.companycommands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_DELIVERIES;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_COMPANIES;
 
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
+import seedu.address.logic.commands.deliverycommands.ListCommand;
 import seedu.address.model.Model;
 
 /**
  * Unfilters companies.
  */
+
 public class UnfilterCommand extends Command {
     public static final String COMMAND_WORD = "unfilter";
 
@@ -20,7 +22,7 @@ public class UnfilterCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
-        model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
+        model.updateFilteredCompanyList(PREDICATE_SHOW_ALL_COMPANIES);
         return new CommandResult(MESSAGE_SUCCESS);
     }
 

@@ -1,7 +1,10 @@
 package seedu.address.logic.commands.deliverycommands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.*;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DEADLINE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PRODUCT;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,7 +22,7 @@ import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.ProductContainsKeywordsPredicate;
 
 /**
- * Sorts a company's deliveries by deadline, with the earliest deadline shown first.
+ * Filters deliveries by product, company, tag, and/or deadline range.
  */
 public class FilterCommand extends Command {
 
@@ -27,27 +30,32 @@ public class FilterCommand extends Command {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Filters deliveries by parameters,\n"
             + "Parameters (Varargs): " + PREFIX_PRODUCT + "PRODUCT " + PREFIX_COMPANY + "COMPANY "
-            + PREFIX_DEADLINE + "DEADLINE\n"
-            + "Example: " + COMMAND_WORD + " " + PREFIX_COMPANY + "Dell" + PREFIX_PRODUCT +"Laptop";
+            + PREFIX_DEADLINE + "DEADLINE" + PREFIX_TAG + "TAG\n"
+            + "Example: " + COMMAND_WORD + " " + PREFIX_COMPANY + "Dell " + PREFIX_PRODUCT + "Laptop "
+            + PREFIX_TAG + "fragile";
 
-    public static final String MESSAGE_SORT_SUCCESS = "Filtered %1$d delivery(s): %2$s";
+    public static final String MESSAGE_FILTER_SUCCESS = "Filtered %1$d delivery(s): %2$s";
     public static final String MESSAGE_NO_DELIVERIES = "No deliveries found: %1$s";
 
     private final List<ProductContainsKeywordsPredicate> productName;
     private final List<CompanyNameContainsKeywordsPredicate> companyName;
+    private final List<String> tags;
     private final List<LocalDate[]> timeRange;
 
     /**
-     * Creates a FilterCommand to filter deliveries for the specified company.
+     * Creates a FilterCommand to filter deliveries for the specified parameters.
      */
     public FilterCommand(List<ProductContainsKeywordsPredicate> productName,
                          List<CompanyNameContainsKeywordsPredicate> companyName,
+                         List<String> tags,
                          List<LocalDate[]> timeRange) {
         requireNonNull(productName);
         requireNonNull(companyName);
+        requireNonNull(tags);
         requireNonNull(timeRange);
         this.productName = productName;
         this.companyName = companyName;
+        this.tags = tags;
         this.timeRange = timeRange;
     }
 
@@ -55,56 +63,97 @@ public class FilterCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
-        List<String> productName = getProductName();
-        List<String> companyName = getCompanyName();
+        List<String> productNames = getProductName();
+        List<String> companyNames = getCompanyName();
 
-        Predicate<Delivery> matchesProduct = delivery -> productName.isEmpty();
-        Predicate<Delivery> matchesCompany = delivery -> companyName.isEmpty();
+        Predicate<Delivery> matchesProduct = delivery -> productNames.isEmpty();
+        Predicate<Delivery> matchesCompany = delivery -> companyNames.isEmpty();
+        Predicate<Delivery> matchesTag = delivery -> tags.isEmpty();
         Predicate<Delivery> matchesDeadline = delivery -> timeRange.isEmpty();
-        Predicate<Delivery> matches;
 
-        List<String> empty = new ArrayList<>();
+        List<String> notFound = new ArrayList<>();
 
-        for (String name : productName) {
-            Predicate<Delivery> match = delivery -> delivery.getProduct().getName().equalsIgnoreCase(name);
-            boolean hasMatchingDelivery = model.getDeliveryBook().getDeliveryList().stream()
-                    .anyMatch(match);
-            if (!hasMatchingDelivery) {
-                empty.add(name);
+        for (String name : productNames) {
+            Predicate<Delivery> match = delivery ->
+                    delivery.getProduct().getName().equalsIgnoreCase(name);
+            boolean hasMatch = model.getDeliveryBook().getDeliveryList().stream().anyMatch(match);
+            if (!hasMatch) {
+                notFound.add(name);
             }
             matchesProduct = matchesProduct.or(match);
         }
 
-        for (String name : companyName) {
-            Predicate<Delivery> match = delivery -> delivery.getCompany().getName().toString().equalsIgnoreCase(name);
-            boolean hasMatchingDelivery = model.getDeliveryBook().getDeliveryList().stream()
-                    .anyMatch(match);
-            if (!hasMatchingDelivery) {
-                empty.add(name);
+        for (String name : companyNames) {
+            Predicate<Delivery> match = delivery ->
+                    delivery.getCompany().getName().toString().equalsIgnoreCase(name);
+            boolean hasMatch = model.getDeliveryBook().getDeliveryList().stream().anyMatch(match);
+            if (!hasMatch) {
+                notFound.add(name);
             }
             matchesCompany = matchesCompany.or(match);
         }
 
+        for (String tag : tags) {
+            Predicate<Delivery> match = delivery ->
+                    delivery.getTags().stream()
+                            .anyMatch(t -> t.tagName.equalsIgnoreCase(tag));
+            boolean hasMatch = model.getDeliveryBook().getDeliveryList().stream().anyMatch(match);
+            if (!hasMatch) {
+                notFound.add(tag);
+            }
+            matchesTag = matchesTag.or(match);
+        }
+
         for (LocalDate[] range : timeRange) {
             Predicate<Delivery> match = delivery -> delivery.getDeadline().isInRange(range);
-            boolean hasMatchingDelivery = model.getDeliveryBook().getDeliveryList().stream()
-                    .anyMatch(match);
-            if (!hasMatchingDelivery) {
-                empty.add(Arrays.toString(range));
+            boolean hasMatch = model.getDeliveryBook().getDeliveryList().stream().anyMatch(match);
+            if (!hasMatch) {
+                notFound.add(Arrays.toString(range));
             }
             matchesDeadline = matchesDeadline.or(match);
         }
 
-        matches = matchesProduct.and(matchesCompany.and(matchesDeadline));
-        model.sortDeliveriesByDeadline(matches);
-        model.updateFilteredDeliveryList(matches);
-        if (!empty.isEmpty()) {
-            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES, this.getParameterString()));
+        Predicate<Delivery> combined =
+                matchesProduct.and(matchesCompany).and(matchesTag).and(matchesDeadline);
+
+        model.sortDeliveriesByDeadline(combined);
+        model.updateFilteredDeliveryList(combined);
+
+        if (!notFound.isEmpty()) {
+            throw new CommandException(
+                    String.format(MESSAGE_NO_DELIVERIES, String.join(", ", notFound)));
         }
 
         return new CommandResult(
-                String.format(MESSAGE_SORT_SUCCESS, model.getFilteredDeliveryList().size(),
-                        this.getParameterString()));
+                String.format(MESSAGE_FILTER_SUCCESS,
+                        model.getFilteredDeliveryList().size(),
+                        getParameterString()));
+    }
+
+    private String getParameterString() {
+        List<String> parts = new ArrayList<>();
+        if (!productName.isEmpty()) {
+            parts.add("product: " + String.join(", ", getProductName()));
+        }
+        if (!companyName.isEmpty()) {
+            parts.add("company: " + String.join(", ", getCompanyName()));
+        }
+        if (!tags.isEmpty()) {
+            parts.add("tag: " + String.join(", ", tags));
+        }
+        if (!timeRange.isEmpty()) {
+            parts.add("timeRange: "
+                    + String.join(", ", timeRange.stream().map(Arrays::toString).toList()));
+        }
+        return String.join(" | ", parts);
+    }
+
+    private List<String> getProductName() {
+        return productName.stream().map(x -> x.getKeywords().get(0)).toList();
+    }
+
+    private List<String> getCompanyName() {
+        return companyName.stream().map(x -> x.getKeywords().get(0)).toList();
     }
 
     @Override
@@ -112,13 +161,12 @@ public class FilterCommand extends Command {
         if (other == this) {
             return true;
         }
-
         if (!(other instanceof FilterCommand otherFilterCommand)) {
             return false;
         }
-
         return productName.equals(otherFilterCommand.productName)
                 && companyName.equals(otherFilterCommand.companyName)
+                && tags.equals(otherFilterCommand.tags)
                 && timeRange.equals(otherFilterCommand.timeRange);
     }
 
@@ -131,31 +179,13 @@ public class FilterCommand extends Command {
         if (!companyName.isEmpty()) {
             res.add("company", getCompanyName());
         }
+        if (!tags.isEmpty()) {
+            res.add("tag", tags);
+        }
         if (!timeRange.isEmpty()) {
-            res.add("timeRange", String.join(" ", timeRange.stream().map(Arrays::toString).toList()));
+            res.add("timeRange",
+                    String.join(" ", timeRange.stream().map(Arrays::toString).toList()));
         }
         return res.toString();
-    }
-
-    private String getParameterString() {
-        String res = "";
-        if (!productName.isEmpty()) {
-            res = res + "product: " + String.join(" ", getProductName()) + "\n";
-        }
-        if (!companyName.isEmpty()) {
-            res = res + "company: " + String.join(" ", getCompanyName()) + "\n";
-        }
-        if (!timeRange.isEmpty()) {
-            res = res + "timeRange: " + String.join(" ", timeRange.stream().map(Arrays::toString).toList()) + "\n";
-        }
-        return res;
-    }
-
-    private List<String> getProductName() {
-        return productName.stream().map(x -> x.getKeywords().get(0)).toList();
-    }
-
-    private List<String> getCompanyName() {
-        return companyName.stream().map(x -> x.getKeywords().get(0)).toList();
     }
 }

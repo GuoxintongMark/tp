@@ -1,18 +1,33 @@
 package seedu.address.logic.parser.deliveryparser;
 
-import seedu.address.logic.commands.deliverycommands.SortCommand;
-import seedu.address.logic.parser.*;
-import seedu.address.logic.parser.exceptions.ParseException;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DEADLINE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PRODUCT;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.parser.CliSyntax.*;
+import seedu.address.logic.commands.deliverycommands.SortCommand;
+import seedu.address.logic.parser.ArgumentMultimap;
+import seedu.address.logic.parser.Parser;
+import seedu.address.logic.parser.Prefix;
+import seedu.address.logic.parser.exceptions.ParseException;
 
+/**
+ * Parses input arguments and creates a new company SortCommand object.
+ */
 public class SortCommandParser implements Parser<SortCommand> {
-    public SortCommand parse(String args) throws ParseException {
-        String[] prefixString = args.trim().split("\\s+");
+
+    /**
+     * Parses user input into command for execution.
+     *
+     * @param userInput full user input string
+     * @return the command based on the user input
+     * @throws ParseException if the user input does not conform the expected format
+     */
+    public SortCommand parse(String userInput) throws ParseException {
+        String[] prefixString = userInput.trim().split("\\s+");
         if (!Arrays.stream(prefixString).allMatch(
                 x -> PREFIX_PRODUCT.equals(new Prefix(x))
                 || PREFIX_COMPANY.equals(new Prefix(x))

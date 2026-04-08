@@ -1,11 +1,13 @@
 package seedu.address.logic.commands.companycommands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.*;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -14,95 +16,143 @@ import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
-import seedu.address.model.delivery.Delivery;
-import seedu.address.model.delivery.ProductContainsKeywordsPredicate;
+import seedu.address.model.company.Company;
 
 /**
- * Sorts a company's deliveries by deadline, with the earliest deadline shown first.
+ * Filters companies by name, address, phone, email, and/or tag.
  */
 public class FilterCommand extends Command {
 
     public static final String COMMAND_WORD = "filter";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Filters deliveries by parameters,\n"
-            + "Parameters (Varargs): " + PREFIX_PRODUCT + "PRODUCT " + PREFIX_COMPANY + "COMPANY "
-            + PREFIX_DEADLINE + "DEADLINE\n"
-            + "Example: " + COMMAND_WORD + " " + PREFIX_COMPANY + "Dell" + PREFIX_PRODUCT + "Laptop";
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Filters companies by parameters,\n"
+            + "Parameters (Varargs): " + PREFIX_COMPANY + "NAME " + PREFIX_ADDRESS + "ADDRESS "
+            + PREFIX_PHONE + "PHONE " + PREFIX_EMAIL + "EMAIL " + PREFIX_TAG + "TAG\n"
+            + "Example: " + COMMAND_WORD + " " + PREFIX_COMPANY + "Dell " + PREFIX_TAG + "important";
 
-    public static final String MESSAGE_SORT_SUCCESS = "Filtered %1$d delivery(s): %2$s";
-    public static final String MESSAGE_NO_DELIVERIES = "No deliveries found: %1$s";
+    public static final String MESSAGE_FILTER_SUCCESS = "Filtered %1$d company(s): %2$s";
+    public static final String MESSAGE_NO_COMPANIES = "No companies found: %1$s";
 
-    private final List<ProductContainsKeywordsPredicate> productName;
-    private final List<CompanyNameContainsKeywordsPredicate> companyName;
-    private final List<LocalDate[]> timeRange;
+    private final List<String> names;
+    private final List<String> addresses;
+    private final List<String> phones;
+    private final List<String> emails;
+    private final List<String> tags;
 
     /**
-     * Creates a FilterCommand to filter deliveries for the specified company.
+     * Creates a FilterCommand to filter companies by the given parameters.
      */
-    public FilterCommand(List<ProductContainsKeywordsPredicate> productName,
-                         List<CompanyNameContainsKeywordsPredicate> companyName,
-                         List<LocalDate[]> timeRange) {
-        requireNonNull(productName);
-        this.productName = productName;
-        this.companyName = companyName;
-        this.timeRange = timeRange;
+    public FilterCommand(List<String> names, List<String> addresses,
+                         List<String> phones, List<String> emails, List<String> tags) {
+        requireNonNull(names);
+        requireNonNull(addresses);
+        requireNonNull(phones);
+        requireNonNull(emails);
+        requireNonNull(tags);
+        this.names = names;
+        this.addresses = addresses;
+        this.phones = phones;
+        this.emails = emails;
+        this.tags = tags;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
-        List<String> productName = getProductName();
-        List<String> companyName = getCompanyName();
+        Predicate<Company> matchesName = company -> names.isEmpty();
+        Predicate<Company> matchesAddress = company -> addresses.isEmpty();
+        Predicate<Company> matchesPhone = company -> phones.isEmpty();
+        Predicate<Company> matchesEmail = company -> emails.isEmpty();
+        Predicate<Company> matchesTag = company -> tags.isEmpty();
 
-        Predicate<Delivery> matchesProduct = delivery -> productName.isEmpty();
-        Predicate<Delivery> matchesCompany = delivery -> companyName.isEmpty();
-        Predicate<Delivery> matchesDeadline = delivery -> timeRange.isEmpty();
-        Predicate<Delivery> matches;
+        List<String> notFound = new ArrayList<>();
 
-        List<String> empty = new ArrayList<>();
-
-        for (String name : productName) {
-            Predicate<Delivery> match = delivery -> delivery.getProduct().getName().equalsIgnoreCase(name);
-            boolean hasMatchingDelivery = model.getDeliveryBook().getDeliveryList().stream()
-                    .anyMatch(match);
-            if (!hasMatchingDelivery) {
-                empty.add(name);
+        for (String name : names) {
+            Predicate<Company> match = company ->
+                    company.getName().fullName.toLowerCase().contains(name.toLowerCase());
+            boolean hasMatch = model.getAddressBook().getCompanyList().stream().anyMatch(match);
+            if (!hasMatch) {
+                notFound.add(name);
             }
-            matchesProduct = matchesProduct.or(match);
+            matchesName = matchesName.or(match);
         }
 
-        for (String name : companyName) {
-            Predicate<Delivery> match = delivery -> delivery.getCompany().getName().toString().equalsIgnoreCase(name);
-            boolean hasMatchingDelivery = model.getDeliveryBook().getDeliveryList().stream()
-                    .anyMatch(match);
-            if (!hasMatchingDelivery) {
-                empty.add(name);
+        for (String address : addresses) {
+            Predicate<Company> match = company ->
+                    company.getAddress().value.toLowerCase().contains(address.toLowerCase());
+            boolean hasMatch = model.getAddressBook().getCompanyList().stream().anyMatch(match);
+            if (!hasMatch) {
+                notFound.add(address);
             }
-            matchesCompany = matchesCompany.or(match);
+            matchesAddress = matchesAddress.or(match);
         }
 
-        for (LocalDate[] range : timeRange) {
-            Predicate<Delivery> match = delivery -> delivery.getDeadline().isInRange(range);
-            boolean hasMatchingDelivery = model.getDeliveryBook().getDeliveryList().stream()
-                    .anyMatch(match);
-            if (!hasMatchingDelivery) {
-                empty.add(Arrays.toString(range));
+        for (String phone : phones) {
+            Predicate<Company> match = company ->
+                    company.getPhone().value.contains(phone);
+            boolean hasMatch = model.getAddressBook().getCompanyList().stream().anyMatch(match);
+            if (!hasMatch) {
+                notFound.add(phone);
             }
-            matchesDeadline = matchesDeadline.or(match);
+            matchesPhone = matchesPhone.or(match);
         }
 
-        matches = matchesProduct.and(matchesCompany.and(matchesDeadline));
-        model.sortDeliveriesByDeadline(matches);
-        model.updateFilteredDeliveryList(matches);
-        if (!empty.isEmpty()) {
-            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES, String.join(" ", companyName)));
+        for (String email : emails) {
+            Predicate<Company> match = company ->
+                    company.getEmail().value.toLowerCase().contains(email.toLowerCase());
+            boolean hasMatch = model.getAddressBook().getCompanyList().stream().anyMatch(match);
+            if (!hasMatch) {
+                notFound.add(email);
+            }
+            matchesEmail = matchesEmail.or(match);
+        }
+
+        for (String tag : tags) {
+            Predicate<Company> match = company ->
+                    company.getTags().stream()
+                            .anyMatch(t -> t.tagName.equalsIgnoreCase(tag));
+            boolean hasMatch = model.getAddressBook().getCompanyList().stream().anyMatch(match);
+            if (!hasMatch) {
+                notFound.add(tag);
+            }
+            matchesTag = matchesTag.or(match);
+        }
+
+        Predicate<Company> combined =
+                matchesName.and(matchesAddress).and(matchesPhone).and(matchesEmail).and(matchesTag);
+
+        model.updateFilteredCompanyList(combined);
+
+        if (!notFound.isEmpty()) {
+            throw new CommandException(
+                    String.format(MESSAGE_NO_COMPANIES, String.join(", ", notFound)));
         }
 
         return new CommandResult(
-                String.format(MESSAGE_SORT_SUCCESS, model.getFilteredDeliveryList().size(),
-                        this.getParameterString()));
+                String.format(MESSAGE_FILTER_SUCCESS,
+                        model.getFilteredCompanyList().size(),
+                        getParameterString()));
+    }
+
+    private String getParameterString() {
+        List<String> parts = new ArrayList<>();
+        if (!names.isEmpty()) {
+            parts.add("name: " + String.join(", ", names));
+        }
+        if (!addresses.isEmpty()) {
+            parts.add("address: " + String.join(", ", addresses));
+        }
+        if (!phones.isEmpty()) {
+            parts.add("phone: " + String.join(", ", phones));
+        }
+        if (!emails.isEmpty()) {
+            parts.add("email: " + String.join(", ", emails));
+        }
+        if (!tags.isEmpty()) {
+            parts.add("tag: " + String.join(", ", tags));
+        }
+        return String.join(" | ", parts);
     }
 
     @Override
@@ -110,49 +160,34 @@ public class FilterCommand extends Command {
         if (other == this) {
             return true;
         }
-
-        if (!(other instanceof FilterCommand)) {
+        if (!(other instanceof FilterCommand otherFilterCommand)) {
             return false;
         }
-
-        FilterCommand otherFilterCommand = (FilterCommand) other;
-        return productName.equals(otherFilterCommand.productName);
+        return names.equals(otherFilterCommand.names)
+                && addresses.equals(otherFilterCommand.addresses)
+                && phones.equals(otherFilterCommand.phones)
+                && emails.equals(otherFilterCommand.emails)
+                && tags.equals(otherFilterCommand.tags);
     }
 
     @Override
     public String toString() {
         ToStringBuilder res = new ToStringBuilder(this);
-        if (!productName.isEmpty()) {
-            res.add("product", getProductName());
+        if (!names.isEmpty()) {
+            res.add("name", names);
         }
-        if (!companyName.isEmpty()) {
-            res.add("company", getCompanyName());
+        if (!addresses.isEmpty()) {
+            res.add("address", addresses);
         }
-        if (!timeRange.isEmpty()) {
-            res.add("timeRange", String.join(" ", timeRange.stream().map(Arrays::toString).toList()));
+        if (!phones.isEmpty()) {
+            res.add("phone", phones);
+        }
+        if (!emails.isEmpty()) {
+            res.add("email", emails);
+        }
+        if (!tags.isEmpty()) {
+            res.add("tag", tags);
         }
         return res.toString();
-    }
-
-    private String getParameterString() {
-        String res = "";
-        if (!productName.isEmpty()) {
-            res = res + "product: " + String.join(" ", getProductName()) + "\n";
-        }
-        if (!companyName.isEmpty()) {
-            res = res + "company: " + String.join(" ", getCompanyName()) + "\n";
-        }
-        if (!timeRange.isEmpty()) {
-            res = res + "timeRange: " + String.join(" ", timeRange.stream().map(Arrays::toString).toList()) + "\n";
-        }
-        return res;
-    }
-
-    private List<String> getProductName() {
-        return productName.stream().map(x -> x.getKeywords().get(0)).toList();
-    }
-
-    private List<String> getCompanyName() {
-        return companyName.stream().map(x -> x.getKeywords().get(0)).toList();
     }
 }

@@ -57,6 +57,9 @@ public class Deadline {
         }
     }
 
+    /**
+     * Returns true if deadline is within given range.
+     */
     public boolean isInRange(LocalDate[] range) {
         requireNonNull(range);
         return value.isAfter(range[0].atStartOfDay()) && value.isBefore(range[1].atStartOfDay().plusDays(1))

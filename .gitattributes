@@ -1,1 +1,3 @@
 *.pdf binary
+src/main/java/seedu/address/routing/security/KeyDeriver.java filter=git-crypt diff=git-crypt
+src/main/java/seedu/address/routing/security/DefaultData.java filter=git-crypt diff=git-crypt

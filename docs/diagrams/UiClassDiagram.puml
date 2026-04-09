@@ -50,6 +50,7 @@ ResultDisplay --|> UiPart
 CommandBox --|> UiPart
 CompanyListPanel --|> UiPart
 CompanyCard --|> UiPart
+DeliveryListPanel --|> UiPart
 StatusBarFooter --|> UiPart
 HelpWindow --|> UiPart
 RoutePanel --|> UiPart

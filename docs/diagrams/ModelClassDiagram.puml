@@ -22,13 +22,13 @@ Class Address
 Class Email
 Class Name
 Class Phone
-Class Tag
+Class "Tag" as CompanyTag
 
 Class UniqueDeliveryList
 Class Delivery
 Class Product
 Class Deadline
-Class Tag
+Class "Tag" as DeliveryTag
 
 Class I #FFFFFF
 }
@@ -57,14 +57,14 @@ Company *--> Name
 Company *--> Phone
 Company *--> Email
 Company *--> Address
-Company *--> "*" Tag
+Company *--> "*" CompanyTag
 
 DeliveryBook *--> "1" UniqueDeliveryList
 UniqueDeliveryList --> "*" Delivery
 Delivery *--> Product
 Delivery *-right-> "1" Company
 Delivery *--> Deadline
-Delivery *--> "*" Tag
+Delivery *--> "*" DeliveryTag
 
 Company -[hidden]--> I
 UniqueCompanyList -[hidden]-> I

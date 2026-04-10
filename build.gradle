@@ -185,11 +185,12 @@ task ensureKeyDeriver {
     def stub = file('src/main/java/seedu/address/routing/security/KeyDeriverStub.java')
     doFirst {
         if (!real.exists() && stub.exists()) {
-            copy {
-                from stub
-                into real.parentFile
-                rename { 'KeyDeriver.java' }
-            }
+            // Copy stub content but rename the class declaration
+            String content = stub.text.replace(
+                'public class KeyDeriverStub',
+                'public class KeyDeriver'
+            )
+            real.text = content
             println "KeyDeriver.java not found — copied stub. Routing will use ors.key file."
         }
     }

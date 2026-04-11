@@ -90,6 +90,13 @@ The Delivery Book view shows all logged deliveries. Deliveries marked as deliver
 
 ## Commands
 
+### Notes about command format
+
+* Words in `UPPER_CASE` are parameters to be supplied by the user.
+* Items in square brackets are optional.
+* Parameters can be provided in any order unless otherwise stated.
+* For commands that do not require parameters (e.g. `help`, `switch`, `exit`), any additional trailing input will be ignored.
+
 ### Navigating Between Books
 
 |Command|What it does|
@@ -135,7 +142,7 @@ The delivery is linked directly to the existing company record instead of storin
 
 |Command|Format|Example|
 |-|-|-|
-|Add|`add pr/PRODUCT c/COMPANY dl/DEADLINE [t/TAG]...`|`add pr/Industrial Printer c/Acme Supplies dl/2026-03-25 14:30 t/urgent`||Edit|`edit INDEX \[pr/PRODUCT] \[c/COMPANY] \[dl/DEADLINE] \[a/ADDRESS] \[t/TAG]...`|`edit 1 dl/2026-03-26 09:00 a/20 Harbour Front Walk t/fragile`|
+|Add|`add pr/PRODUCT c/COMPANY dl/DEADLINE [t/TAG]...`|`add pr/Industrial Printer c/Acme Supplies dl/2026-03-25 14:30 t/urgent`|
 |Delete|`delete INDEX`|`delete 2`|
 |Edit|`edit INDEX [pr/PRODUCT] [c/COMPANY] [dl/DEADLINE] [t/TAG]...`|`edit 1 dl/2026-03-26 09:00 t/fragile`|
 |Mark delivered|`mark INDEX`|`mark 1`|

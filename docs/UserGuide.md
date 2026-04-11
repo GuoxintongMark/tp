@@ -130,6 +130,13 @@ Manage your network of business contacts. These commands are active when you're 
 |`a/`|Physical address|Yes|
 |`t/`|Tag (repeatable)|No|
 
+#### Notes
+
+* Company names may contain only alphanumeric English characters and spaces.
+* Addresses currently support only standard English keyboard characters.
+* Tags may contain only alphanumeric English characters.
+* Specifying one or more `t/` fields in an `edit` command replaces all existing tags.
+
 ---
 
 ### Delivery Book
